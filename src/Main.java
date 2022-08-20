@@ -16,19 +16,19 @@ import java.util.ArrayList;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        /*BookWorkInUser user=new Authorization().enterUsers();
+        BookWorkInUser user=new Authorization().enterUsers();
         Menu menu;
         if(user instanceof Admin)
             menu=new MenuAdmin();
         else
             menu=new MenuUser();
-        menu.complete();*/
-        FileReader fileReader=new FileReader("AccountFile.txt");
+        menu.complete();
+        /*FileReader fileReader=new FileReader("AccountFile.txt");
        AccountProperty accountProperty= new Authorization().ReadUserInfo(fileReader);
         System.out.println(accountProperty.getLogin());
         System.out.println(accountProperty.getPassword());
         System.out.println(accountProperty.getEmail());
         System.out.println(accountProperty.getAccountType());
-        fileReader.close();
+        fileReader.close();*/
     }
 }
