@@ -16,7 +16,15 @@ import java.util.ArrayList;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        BookWorkInUser user=new Authorization().enterUsers();
+        BookWorkInUser user;
+        do {
+            try {
+                user = new Authorization().enterUsers();
+                break;
+            } catch (IllegalStateException e) {
+                System.out.println("This account doesn't exist! Try again");
+            }
+        }while(true);
         Menu menu;
         if(user instanceof Admin)
             menu=new MenuAdmin();

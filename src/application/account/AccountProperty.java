@@ -35,4 +35,17 @@ public class AccountProperty {
     public void setAccountType(AccountType accountType) {
         this.accountType = accountType;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        AccountProperty info=null;
+        if(obj instanceof AccountProperty){
+            info=(AccountProperty)obj;
+        }
+        else throw new IllegalArgumentException("Not AccountProperty class");
+        if(login.equals(info.login) && passwordHash.equals(info.passwordHash)){
+            return true;
+        }
+        else return false;
+    }
 }

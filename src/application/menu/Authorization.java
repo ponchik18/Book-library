@@ -1,8 +1,6 @@
 package application.menu;
 
-import application.account.AccountProperty;
-import application.account.AccountType;
-import application.account.PasswordHash;
+import application.account.*;
 import application.workingWithBooks.BookWorkInUser;
 
 import javax.swing.text.html.Option;
@@ -30,7 +28,25 @@ public class Authorization {
     }
     private Optional<BookWorkInUser> checkExistingAccount(AccountProperty accountProperty){
         try(FileInputStream fos=new FileInputStream(fileWithAccount)){
-
+            Scanner scanner=new Scanner(fos);
+            while(scanner.hasNextLine()){
+                String str=scanner.nextLine();
+                Pattern pattern = Pattern.compile(" ");
+                String[] arrayStr = pattern.split(str);
+                AccountProperty account = new AccountProperty(arrayStr[0],arrayStr[1]);
+                account.setAccountType(AccountType.valueOf(arrayStr[3]));
+                account.setEmail(arrayStr[2]);
+                if(accountProperty.equals(account)){
+                    BookWorkInUser bookWorkInUser=null;
+                    if(account.getAccountType()==AccountType.Admin){
+                        bookWorkInUser=new Admin();
+                    }
+                    else{
+                        bookWorkInUser=new User();
+                    }
+                    return Optional.of(bookWorkInUser);
+                }
+            }
         }catch (IOException ex){
             System.out.println(ex.getMessage());
         }
@@ -49,31 +65,15 @@ public class Authorization {
             System.out.println(ex.getMessage());
         }
     }
-    public AccountProperty ReadUserInfo(FileReader fileReader){
-        Scanner scanner =new Scanner(fileReader);
-        String str=scanner.nextLine();
-        if(scanner.hasNextLine()) {
-            Pattern pattern = Pattern.compile(" ");
-            String[] arrayStr = pattern.split(str);
-            AccountProperty accountType = new AccountProperty(arrayStr[0],arrayStr[1]);
-            accountType.setAccountType(AccountType.valueOf(arrayStr[3]));
-            accountType.setEmail(arrayStr[2]);
-            return accountType;
-        }
-        return null;
-    }
 
-    public BookWorkInUser enterUsers(){
-        do{
+    public BookWorkInUser enterUsers() throws IllegalStateException{
+
             AccountProperty accountProperty=getUsersInfo();
             Optional<BookWorkInUser> optional=checkExistingAccount(accountProperty);
-            if(!optional.isEmpty()){
-                break;
+            if(optional.isEmpty()){
+                throw new IllegalStateException();
             }
-            System.out.println("Error, Invalid password or login! Try again...");
-
-        }while(true);
-        throw new UnsupportedOperationException();
+            else return optional.get();
     }
     public boolean registerUser(){
         AccountProperty accountProperty=getUsersInfo();
